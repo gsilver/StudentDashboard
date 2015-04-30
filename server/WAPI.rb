@@ -33,6 +33,7 @@ class WAPI
   # Constants for the http status of the underlying request.
   HTTP_SUCCESS = 200
   HTTP_UNAUTHORIZED = 401
+  HTTP_NOT_FOUND = 404
 
   # The application provides the values required to make a connection
   # to the WSO2 ESB.  The key and secret are oauth key and secret for generating tokens.
@@ -92,7 +93,7 @@ class WAPI
 
   def do_request(request)
     url=format_url(request)
-    logger.debug "WAPI: do_request: url: #{url}"
+    logger.debug "WAPI: #{__LINE__}: url: #{url}"
     msg = Thread.current.to_s+": "+url
     r = Stopwatch.new(msg)
     r.start
@@ -103,8 +104,6 @@ class WAPI
 
       ## try to parse as json or send back a wrapped error
       j = JSON.parse(response)
-      #logger.debug "WAPI: #{__LINE__}: do_request: esb response "+j.inspect
-
       ## convert response code to integer if comes as a string
       begin
         # convert the response code to an integer
@@ -112,7 +111,7 @@ class WAPI
           j['responseCode'] = j['responseCode'].to_i
         end
       rescue => err
-        logger.info "WAPI: #{__LINE__}: do_request: conversion error "+j.inspect
+        logger.info "WAPI: #{__LINE__}: conversion error "+j.inspect
         ## because of the error reset back to the original response.
         j = JSON.parse(response)
       end
@@ -121,14 +120,19 @@ class WAPI
       j = JSON.generate(j)
       wrapped_response = WAPIResultWrapper.new(rc, "COMPLETED", j)
     rescue Exception => exp
-      logger.debug "WAPI: #{__LINE__}: do_request: exception: "+exp.inspect
+      logger.debug "WAPI: #{__LINE__}: exp: "+exp.inspect
+      #logger.debug ("exception: #{exp.message} "+
+      #Logging.trimBackTraceRVM(exp.backtrace).join("\n"))
       wrapped_response = WAPIResultWrapper.new(WAPI::UNKNOWN_ERROR, "EXCEPTION", exp)
     end
     #logger.debug "WAPI: #{__LINE__}: do_request: wrapped response: "+wrapped_response.inspect
     r.stop
-    logger.info "WAPI: do_request: stopwatch: "+ r.pretty_summary
+    logger.info "WAPI: #{__LINE__}: do_request: #{url} stopwatch: "+ r.pretty_summary
     wrapped_response
   end
+
+  #return WAPIResultWrapper.new(WAPI::UNKNOWN_ERROR, "bad data for key: #{query_key}:#{detail_key}: ",
+  #                            excpt.message+ " "+Logging.trimBackTraceRVM(excpt.backtrace).join("/n"))
 
   ## Run the request.  If the result is unauthorized then renew the token and try again.
   ## In any case will return a wrapped result.
@@ -140,11 +144,11 @@ class WAPI
     if wrapped_response.meta_status == WAPI::UNKNOWN_ERROR &&
         wrapped_response.result.respond_to?('http_code') &&
         wrapped_response.result.http_code == HTTP_UNAUTHORIZED
-      #logger.debug("WAPI: #{__LINE__}: unauthorized on initial request: "+wrapped_response.inspect)
+      logger.debug("WAPI: #{__LINE__}: unauthorized on initial request: "+wrapped_response.inspect)
       wrapped_response = renew_token()
       ## if the token renewed ok then try the request again.
       if wrapped_response.meta_status == WAPI::SUCCESS
-#        logger.debug("WAPI: #{__LINE__}: retrying request after token renewal")
+        logger.debug("WAPI: #{__LINE__}: retrying request after token renewal")
         wrapped_response = do_request(request)
       end
     end
@@ -155,7 +159,7 @@ class WAPI
   def renew_token
 
     begin
-      logger.info("WAPI: #{__LINE__}: token_server: #{@token_server}")
+      logger.info("token_server: #{@token_server}")
       response = runTokenRenewalPost
       ## If it worked then parse the result as json.  This is here to capture any JSON parsing exceptions.
       if response.code == HTTP_SUCCESS
@@ -202,7 +206,7 @@ class WAPI
   ensure
     # make sure to print the elapsed time for the renewal.
     renew.stop;
-    logger.info("WAPI: renew token post: stopwatch: "+renew.pretty_summary)
+    logger.info("renew token post: stopwatch: "+renew.pretty_summary)
   end
 
 end

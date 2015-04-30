@@ -12,6 +12,7 @@ require_relative '../data_provider_esb'
 require 'logger'
 require_relative '../../server/Logging'
 require_relative '../WAPI'
+require_relative '../WAPI_result_wrapper'
 
 
 # Test parsing of potential results from ESB.  Tests concentrate
@@ -65,5 +66,17 @@ class TestProviderESB < MiniTest::Test
     h = '{"getMyRegTermsResponse":{"Term":[{"TermCode":"2020","TermDescr":"Winter 2015","TermShortDescr":"WN 2015"}]}}'
     t = @m.parseESBData(h, DataProviderESB::TERM_REG_KEY, DataProviderESB::TERM_KEY)
     assert_equal(WAPI::SUCCESS, t.meta_status, 'ESB returned value was good')
+  end
+
+  # deal with a 500 error from the ESB
+  #do_request: exception: 500 Internal Server Error: {"ErrorResponse":"{\"responseCode\":404,\"responseDescription\":Please specify a valid Uniq Name} "}
+  def test_esb_500_error
+    invalid_uniqname = '500 Internal Server Error: {"ErrorResponse":"{\"responseCode\":404,\"responseDescription\":Please specify a valid Uniq Name} "}'
+    s = Struct.new(:response)
+    h = s.new(invalid_uniqname)
+#    h = 'exception: 500 Internal Server Error: {"ErrorResponse":"{\"responseCode\":404,\"responseDescription\":Please specify a valid Uniq Name} "}'
+    t = @m.parseESBData(h, DataProviderESB::TERM_REG_KEY, DataProviderESB::TERM_KEY)
+    assert_equal(WAPI::HTTP_NOT_FOUND, t.meta_status, 'resource not found')
+    JSON.parse(t.value_as_json)
   end
 end

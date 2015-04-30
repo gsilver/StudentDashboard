@@ -50,7 +50,7 @@ module DataProviderESB
     data = @@w.get_request(url)
     logger.debug("dataProviderESB  #{__LINE__}: CallDataUrl:  #{url}: data: "+data.inspect)
     result = data.result
-    logger.debug("dataProviderESB  #{__LINE__}: CallDataUrl: result: "+result.inspect)
+    logger.debug("dataProviderESB  #{__LINE__}: CallDataUrl: result: [#{result.inspect}]")
     result
   end
 
@@ -66,7 +66,7 @@ module DataProviderESB
       query_key_value = parsed[query_key]
 
       ## Fix up unexpected values from ESB where there is no detail level data at all.  This can happen,
-      ## for example, a user has no term data at all.
+      ## for example, a user has no term data.
       ## Make these conditions separate so easy to take out when ESB returns expected values.
       return WAPIResultWrapper.new(WAPI::SUCCESS, "replace nil value with empty array", []) if query_key_value.nil?
       return WAPIResultWrapper.new(WAPI::SUCCESS, "replace empty string with empty array", []) if query_key_value.length == 0
@@ -75,12 +75,37 @@ module DataProviderESB
 
       # if there is a detail_key but no data that's an error.
       raise "ESBInvalidData: input: #{result}" if parsed_value.nil?
+
+      # now everything is awesome
       return WAPIResultWrapper.new(WAPI::SUCCESS, "found value #{query_key}:#{detail_key} from ESB", parsed_value)
     rescue => excpt
-      return WAPIResultWrapper.new(WAPI::UNKNOWN_ERROR, "bad data for key: #{query_key}:#{detail_key}: ",
-                                   excpt.message+ " "+Logging.trimBackTraceRVM(excpt.backtrace).join("/n"))
+      return handleESBRescue result,excpt, query_key, detail_key
     end
-    # won't get here.
+    logger.warn "WAPI: #{__LINE__}: Should never get here"
+  end
+
+  # handle the exception
+  def handleESBRescue(result,excpt,query_key,detail_key)
+    logger.debug "result: [#{result.inspect}]"
+    ## handle an internal server error
+    return handleESBServerError(result) if /Internal\s*Server\s*Error/i =~ result.to_s
+    ## don't know what is going on.
+    return WAPIResultWrapper.new(WAPI::UNKNOWN_ERROR, "bad data for key: #{query_key}:#{detail_key}: ",
+                                 excpt.message+ " "+Logging.trimBackTraceRVM(excpt.backtrace).join("\n"))
+  end
+
+  # Deal with specific server errors
+  #500 Internal Server Error: {"ErrorResponse":"{\"responseCode\":404,\"responseDescription\":Please specify a valid Uniq Name} "}
+  # If there are more errors to recoginize then likely want to parse the response rather than search it.
+  def handleESBServerError(result)
+    logger.debug "handleESBServerError: inspect: [#{result.inspect}]"
+    logger.debug "response code: [#{$1}]" if /responseCode.*:(\d\d\d),/i =~ result.response
+    responseCode = $1 if /responseCode.*:(\d\d\d),/i =~ result.response
+
+    # compare to string since extracted from a regex.
+    return WAPIResultWrapper.new(WAPI::HTTP_NOT_FOUND, "resource not found",result.response) if responseCode == "404"
+    ## do not know what happened.
+    return WAPIResultWrapper.new(WAPI::UNKNOWN_ERROR, "internal server error", result.inspect)
   end
 
   def dataProviderESBCourse(uniqname, termid, security_file, app_name, default_term)

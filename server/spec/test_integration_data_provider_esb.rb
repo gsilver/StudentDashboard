@@ -19,12 +19,13 @@ class TestIntegrationDataProviderESB < Minitest::Test
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    logger.level = Logger::ERROR
-    #logger.level = Logger::DEBUG
+    #logger.level = Logger::ERROR
+    logger.level = Logger::DEBUG
 
     ## values for testing
 
     @esb_application = "SD-TEST-DLH"
+    #@esb_application = "StudentDashboard-PROD"
     @security_file = "./security.yml"
 
     @known_uniqname = "ststvii"
@@ -103,7 +104,6 @@ class TestIntegrationDataProviderESB < Minitest::Test
 
   def test_esb_no_terms
 
-    skip("address with another jira")
     ### create inline class and include the module under test.
     m = Class.new do
       include DataProviderESB
@@ -114,13 +114,17 @@ class TestIntegrationDataProviderESB < Minitest::Test
     end.new
 
     refute_nil(m,"create provider object")
-    terms = m.dataProviderESBTerms("xxx", @security_file,@esb_application)
+    #terms = m.dataProviderESBTerms("xxx", @security_file,@esb_application)
+    #uniqname = "dlhaines"
+    uniqname = "xxx"
+    terms = m.dataProviderESBTerms(uniqname, @security_file,@esb_application)
+    #terms = m.dataProviderESBCourse(uniqname, @security_file,@esb_application)
     puts "terms: "+terms.inspect
     assert_equal(WAPI::UNKNOWN_ERROR,terms.meta_status,'get bad result for missing uniqname')
     logger.debug "terms: "+terms.inspect
     t = terms.result
     puts "t: "+t.inspect
-    assert(t.length == 0,"get empty array when no terms")
+    assert(t.length == 0,"got result for missing uniqname")
 
   end
 
