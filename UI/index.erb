@@ -74,8 +74,9 @@
                     -->
                     <div ng-include src="'views/courses.html'"></div>
                 </div>
+                
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col2">
                 <!--
-                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col2 phasePlusOne">
                     <div class="row">
                         <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left:0">
                             <h2 class="colHeader">To Do</h2>
@@ -140,30 +141,8 @@
                             </li>
                         </ul>
                     </div>
-                    <h2 class="colHeader">UM Events</h2>
-
-                    <div id="uniEvents" class="itemPanel" ng-controller = "uniEventsController">
-
-                    <div id="uniEvents" class="itemPanel">
-                        <ul>
-                            <li ng-repeat="item in unievents" class="container-fluid">
-                                <div class="row">
-                                    <div class ="col-lg-1 col-md-1 col-xs-1 iconContainer">
-                                        <i class="glyphicon customIcon {{item.event_type}}"></i>
-                                    </div>
-                                    <div class ="col-lg-7 col-md-7 col-xs-7">
-                                        <a target="_blank" href="{{item.permalink}}">{{item.event_title}}</a> 
-                                         <a class="btn btn-xs btn-link popOver" data-toggle="popover" title="{{item.event_title}}" data-content="{{item.description}}">(more<span class="sr-only"> on {{item.event_title}}</span>?)</a>
-                                    </div>
-                                    <div class ="col-lg-4 col-md-4 col-sm-4 col-xs-4 date">
-                                        <small class="dateSpan">{{ item.datetime_start | date:'MM/dd HH:mm a'}}</small>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
+                -->
+               <!-- 
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col3 phasePlusOne">
                     <h2 class="colHeader">Recent Activity</h2>
 
@@ -194,6 +173,7 @@
                     </div>
                 </div>
             -->
+            <div ng-include src="'views/umevents.html'"></div>
         </div>
         </div>
 

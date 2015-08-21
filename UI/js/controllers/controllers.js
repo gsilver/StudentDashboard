@@ -74,3 +74,18 @@ dashboardApp.controller('termsController', ['Courses', 'Terms', '$rootScope', '$
   };
 
 }]);
+
+
+dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (UMEvents, $scope) {
+  // use test data till we can get it from the calendar of events
+  var url = 'data/uniEvents.json';
+  UMEvents.getEvents(url).then(function (data) {
+    if (data.failure) {
+      $scope.umevents.errors = data;
+      $scope.loading = false;
+    } else {
+        $scope.umevents = data;
+        $scope.loading = false;
+    }
+  });
+}]);

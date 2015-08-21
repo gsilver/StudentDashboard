@@ -90,3 +90,32 @@ dashboardApp.factory('Terms', function ($http) {
     }
   };
 });
+
+/**
+ * Singleton that does the requests for the UM Events
+ * Inner function uses the URL passed to it
+ */
+
+dashboardApp.factory('UMEvents', function ($http) {
+  return {
+    getEvents: function (url) {
+      return $http.get(url, {cache: true}).then(
+        function success(result) {
+         if(result.status !==200){
+            result.errors = errorHandler(url, result);
+            result.errors.failure = true;
+            return result.errors;
+          }
+          else {
+            return result.data;
+          }
+        },
+        function error(result) {
+          result.errors = errorHandler(url, result);
+          result.errors.failure = true;
+          return result.errors;
+        }
+      );
+    }
+  };
+});
