@@ -10,6 +10,9 @@
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-4 col-xs-5 date">
                         <small class="dateSpan">{{item.datetime_start | date:'MM/dd'}}<br> <small class="dateSpan">{{ item.datetime_start | date:'h:mm a'}}</small> <span ng-if="item.has_end_time !==0">-</span> <small class="dateSpan">{{ item.datetime_end | date:'h:mm a'}}</small>
+                        <p>
+                            <span ng-repeat="tag in item.tags"><span class="label label-primary">{{tag}}</span> </span>
+                        </p>
                     </div>
                 </div>
             </li>
