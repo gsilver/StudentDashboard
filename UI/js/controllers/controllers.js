@@ -84,8 +84,18 @@ dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (
       $scope.umevents.errors = data;
       $scope.loading = false;
     } else {
+        $scope.categories =data.categories;
+        $scope.tags =data.tags;
+        delete data.categories;
+        delete data.tags;
         $scope.umevents = data;
-        $scope.loading = false;
+        $scope.loadingEvents = false;
     }
   });
+  $scope.getCategory = function(category) {
+    //$scope.getCategory = '';
+    console.log(category)
+    $scope.viewCategory = category;
+  };
+
 }]);
