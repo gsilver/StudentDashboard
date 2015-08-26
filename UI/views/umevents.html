@@ -14,8 +14,8 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <p ng-show="!umev-showalltags"><span ng-repeat="tag in item.tags | limitTo:4"><span class="label label-primary">{{tag}}</span> </span><span ng-show="item.tags.length > 4" ng-click="umevshowalltags = !umevshowalltags"><span class="label label-default">More</span> </span></p>
-                        <p ng-show="umevshowalltags"><span ng-repeat="tag in item.tags | limitTo:4"><span class="label label-primary">{{tag}}</span> </span></p>
+                        <p ng-show="!umevshowalltags"><span ng-repeat="tag in item.tags | limitTo:4"><span class="label label-primary">{{tag}}</span> </span><a href="" ng-show="item.tags.length > 4" ng-click="umevshowalltags = !umevshowalltags"><span class="label label-default">More</span> </a></p>
+                        <p ng-show="umevshowalltags" style="line-height:25px"><span ng-repeat="tag in item.tags"><span class="label label-primary">{{tag}}</span> </span></p>
                     </div>
                 </div>
             </li>
