@@ -64,3 +64,7 @@ $(document).on('click', '.showMoreInstructors', function (e) {
   $(this).closest('div.instructorsInfo').find('.moreInstructors').fadeToggle();
   return null;
 });
+
+$(document).on('click', 'ul.tagMenu input, ul.tagMenu label', function (e) {
+    e.stopPropagation();
+});

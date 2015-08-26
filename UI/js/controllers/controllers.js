@@ -1,6 +1,6 @@
 'use strict';
 /* jshint  strict: true*/
-/* global $, dashboardApp */
+/* global $, dashboardApp, _ */
 
 /**
  * Terms controller - Angular dependencies are injected.
@@ -84,18 +84,33 @@ dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (
       $scope.umevents.errors = data;
       $scope.loading = false;
     } else {
-        $scope.categories =data.categories;
-        $scope.tags =data.tags;
-        delete data.categories;
-        delete data.tags;
+        
+        //$scope.categories =data[data.length - 2];
+        $scope.categories = _.find(data, 'allCategories').allCategories;
+        $scope.tags = _.find(data, 'allTags').allTags;
+        
+        //delete data.categories;
+        //delete data.tags;
+        
+        data = _.reject(data, 'allCategories');
+        data = _.reject(data, 'allTags');
         $scope.umevents = data;
         $scope.loadingEvents = false;
     }
   });
   $scope.getCategory = function(category) {
-    //$scope.getCategory = '';
-    console.log(category)
     $scope.viewCategory = category;
   };
+
+  $scope.setSelectedTags = function() {
+    var selectedTags =[];
+    for (var i = $scope.tags.length - 1; i >= 0; i--) {
+      if ($scope.tags[i].checked) {
+        selectedTags.push($scope.tags[i]);
+      }
+    }
+    console.log(selectedTags);
+  };
+
 
 }]);

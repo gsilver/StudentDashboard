@@ -116,13 +116,13 @@ dashboardApp.factory('UMEvents', function($http) {
                         categories.push(l.event_type);
                         $.each(l.tags, function(i, l) {
                             tags.push(l);
-                        });     
+                        });
                       });
                       categories = _.uniq(categories).sort();
                       tags = _.uniq(tags).sort();
-                      result.data.categories = categories;
-                      result.data.tags = tags;
-                      return result.data;
+                      result.data.categories = {'allCategories': categories};
+                      result.data.tags =  {'allTags': tags};
+                      return _.toArray(result.data);
                     }
                 },
                 function error(result) {
