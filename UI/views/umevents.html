@@ -7,8 +7,8 @@
             </button>&nbsp;
             <ul role="menu" class="dropdown-menu tagMenu">
               <li>
-                <span ng-repeat="tag in tags"><span class="label label-outline"><input type="checkbox"
-                ng-change="setSelectedTags()" id="tagLabel{{$id}}"> <label for="tagLabel{{$id}}">{{tag}}</label></span> </span>
+                <span ng-repeat="tag in tags"><span class="label label-outline"><input type="checkbox" ng-click="setSelectedTags()"
+                 id="tagLabel{{$id}}"> <label for="tagLabel{{$id}}">{{tag}}</label></span> </span>
               </li>
             </ul>
           </div>
@@ -16,15 +16,17 @@
             <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
               Categories <span class="caret"></span>
             </button>
-            <ul role="menu" class="dropdown-menu">
-              <li ng-repeat="category in categories"><a ng-click="getCategory(category)" href="">{{category}}</a></li>
+            <ul role="menu" class="dropdown-menu catMenu">
+              <li ng-repeat="category in categories"><a ng-click="getCategory(category)" href="" style="position:relative">{{category[0]}} <span class="badge">{{category[1]}}</span></a></li>
             </ul>
           </div>
           <div ng-show="loadingEvents" class="spinner pull-right ng-hide"></div>
         </h3>
-        <p ng-show="viewCategory"> Showing {{viewCategory}} - <a href="" ng-click="viewCategory =''">  see all?</a></p>
+        <p ng-show="viewCategory"> Showing {{viewCategory}}  <a href="" ng-click="viewCategory =''">  see all?</a></p>
+        <p ng-show="selectedTags"> Showing <span ng-repeat="selectedTag in selectedTags"> <span class="label label-primary">{{selectedTag}}</span> </span> - <a href="" ng-click="selectedTags =''">  see all?</a></p>
         <ul class="itemList">
             <li ng-repeat="item in filteredItems  = (umevents | filter:item.event_type = viewCategory) | orderBy: 'item.datetime_start'" class="container-fluid">
+            
                 <div class="row">
                     <div class="col-lg-7 col-md-7 col-xs-7">
                         <a target="_blank" href="{{item.permalink}}">{{item.event_title | words:7 }}</a>

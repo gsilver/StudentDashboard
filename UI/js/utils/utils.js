@@ -46,7 +46,25 @@ var errorHandler = function (url, result) {
 
 };
 
+var countReps = function(arr) {
+  // counts repetitions in in array, returns 2 arrays of
+  // equal length  - one with the uniqued input array, the other 
+  // with the number of times the uniqued value was repeated
+    var a = [], b = [], prev;
 
+    arr.sort();
+    for ( var i = 0; i < arr.length; i++ ) {
+        if ( arr[i] !== prev ) {
+            a.push(arr[i]);
+            b.push(1);
+        } else {
+            b[b.length-1]++;
+        }
+        prev = arr[i];
+    }
+
+    return [a, b];
+};
 
 /**
  *
@@ -68,3 +86,4 @@ $(document).on('click', '.showMoreInstructors', function (e) {
 $(document).on('click', 'ul.tagMenu input, ul.tagMenu label', function (e) {
     e.stopPropagation();
 });
+

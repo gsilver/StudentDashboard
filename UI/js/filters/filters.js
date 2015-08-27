@@ -37,4 +37,4 @@ angular.module('dashFilters', []).filter('dateAgo', function () {
       return input.replace(',', ', ');
     }
   };
-});
+})

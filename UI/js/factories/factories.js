@@ -1,6 +1,6 @@
 'use strict';
 /* jshint  strict: true*/
-/* global $, errorHandler, _, dashboardApp */
+/* global $, errorHandler, _, dashboardApp, countReps */
 
 /**
  * Singleton that does the requests for the courses
@@ -118,7 +118,12 @@ dashboardApp.factory('UMEvents', function($http) {
                             tags.push(l);
                         });
                       });
-                      categories = _.uniq(categories).sort();
+                      //use function in utils to count repetitions in array
+                      //returns two arrays, 1) uniq sorted values 2) number of repetitions
+                      var cr = countReps(categories);
+                      //use zip to join the two arrays [a,b] and [1, 2] return [[a,1], [b, 2]]
+                      categories = _.zip(cr[0],cr[1]);
+
                       tags = _.uniq(tags).sort();
                       result.data.categories = {'allCategories': categories};
                       result.data.tags =  {'allTags': tags};

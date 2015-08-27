@@ -84,32 +84,28 @@ dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (
       $scope.umevents.errors = data;
       $scope.loading = false;
     } else {
-        
-        //$scope.categories =data[data.length - 2];
         $scope.categories = _.find(data, 'allCategories').allCategories;
         $scope.tags = _.find(data, 'allTags').allTags;
-        
-        //delete data.categories;
-        //delete data.tags;
-        
         data = _.reject(data, 'allCategories');
         data = _.reject(data, 'allTags');
         $scope.umevents = data;
         $scope.loadingEvents = false;
     }
   });
+  // filter to view only selected category
   $scope.getCategory = function(category) {
-    $scope.viewCategory = category;
+    $scope.viewCategory = category[0];
   };
-
+// filter to view only selected tags (TODO)
   $scope.setSelectedTags = function() {
+    // still needs a filter based on the selectedTags array
     var selectedTags =[];
-    for (var i = $scope.tags.length - 1; i >= 0; i--) {
-      if ($scope.tags[i].checked) {
-        selectedTags.push($scope.tags[i]);
+    $('.tagMenu input').each(function(){
+      if(this.checked){
+        selectedTags.push($(this).next('label').text());
       }
-    }
-    console.log(selectedTags);
+    });
+    $scope.selectedTags = selectedTags;
   };
 
 
