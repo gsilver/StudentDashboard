@@ -282,3 +282,51 @@ dashboardApp.factory('ToDosCTools', function ($http) {
     }
   };
 });
+
+
+/**
+ * Singleton that does the requests for the UM Events
+ * Inner function uses the URL passed to it
+ */
+
+dashboardApp.factory('UMEvents', function($http) {
+    return {
+        getEvents: function(url) {
+            return $http.get(url, {
+                cache: true
+            }).then(
+                function success(result) {
+                    if (result.status !== 200) {
+                        result.errors = errorHandler(url, result);
+                        result.errors.failure = true;
+                        return result.errors;
+                    } else {
+                      var categories =[];
+                      var tags = [];
+                      $.each(result.data, function(i, l) {
+                        categories.push(l.event_type);
+                        $.each(l.tags, function(i, l) {
+                            tags.push(l);
+                        });
+                      });
+                      //use function in utils to count repetitions in array
+                      //returns two arrays, 1) uniq sorted values 2) number of repetitions
+                      var cr = countReps(categories);
+                      //use zip to join the two arrays [a,b] and [1, 2] return [[a,1], [b, 2]]
+                      categories = _.zip(cr[0],cr[1]);
+
+                      tags = _.uniq(tags).sort();
+                      result.data.categories = {'allCategories': categories};
+                      result.data.tags =  {'allTags': tags};
+                      return _.toArray(result.data);
+                    }
+                },
+                function error(result) {
+                    result.errors = errorHandler(url, result);
+                    result.errors.failure = true;
+                    return result.errors;
+                }
+            );
+        }
+    };
+});
