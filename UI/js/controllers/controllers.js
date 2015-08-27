@@ -1,6 +1,6 @@
 'use strict';
 /* jshint  strict: true*/
-/* global $, dashboardApp, _ */
+/* global $, dashboardApp, _, moment, GTasksToDoCleaner, localStorateUpdateTodos */
 
 
 /**
@@ -97,7 +97,264 @@ dashboardApp.controller('termsController', ['Courses', 'Terms', '$rootScope', '$
           $scope.loading = false;
       }
     });
-
   };
 
 }]);
+ /**
+  * Schedule controller. Angular dependencies are injected - using canned data for now
+  */
+
+ dashboardApp.controller('scheduleController', ['Schedule', 'getMapCoords', 'pageDay', '$scope', function(Schedule, getMapCoords, pageDay, $scope) {
+     var scheduleUrl = 'data/schedule/schedule.json';
+     var wdayint = moment().weekday();
+
+     $scope.weekdayAbbr = pageDay.getDay(wdayint)[0];
+     $scope.dateWeek = moment().format('dddd');
+
+     Schedule.getSchedule(scheduleUrl).then(function(data) {
+         if (data.failure) {
+             $scope.$parent.term = $rootScope.lang.termFailure;
+         } else {
+             $scope.schedule = data;
+         }
+     });
+
+     $scope.openMap = function(building, mobile) {
+         getMapCoords.getCoords(building).then(function(data) {
+             if (data.failure) {
+                 //report error 
+             } else {
+                 // open new Google maps window with directions from current location
+                 if (mobile) {
+                     window.open('https://www.google.com/maps/dir/Current+Location/' + data.latitude + ',' + data.longitude);
+                 } else {
+                     window.open('http://maps.google.com/maps?q=' + data.latitude + ',' + data.longitude);
+                 }
+
+             }
+         });
+     };
+
+     $scope.pageDay = function(dir) {
+         var wdayintnew;
+         if (dir === 'next') {
+             if (wdayint === 7) {
+                 wdayintnew = 1;
+             } else {
+                 wdayintnew = wdayint + 1;
+             }
+         } else {
+             if (wdayint === 1) {
+                 wdayintnew = 7;
+             } else {
+                 wdayintnew = wdayint - 1;
+             }
+         }
+
+         wdayint = wdayintnew;
+
+         $scope.weekdayAbbr = pageDay.getDay(wdayint)[0];
+         $scope.dateWeek = pageDay.getDay(wdayint)[1];
+     };
+ }]);
+
+ /**
+  * Todo controller, using fake data for now
+  */
+
+ dashboardApp.controller('todoController', ['ToDosCanvas', 'ToDosCTools', '$scope', function(ToDosCanvas, ToDosCTools, $scope) {
+     var canvasData = [];
+     var ctoolsData = [];
+     var combinedData = [];
+
+     ToDosCanvas.getToDos('data/todo/canvas.json').then(function(data) {
+         data = eval(data);
+         canvasData = data;
+         ToDosCTools.getToDos('data/todo/ctools.json').then(function(data) {
+             ctoolsData = data;
+             if (localStorage.getItem('toDoStore')) {
+                 var toDoStore = GTasksToDoCleaner(eval(localStorage.getItem('toDoStore')));
+                 combinedData = combinedData.concat(canvasData, ctoolsData, toDoStore);
+             } else {
+                 combinedData = combinedData.concat(canvasData, ctoolsData);
+             }
+             $scope.todos = combinedData;
+
+             /* to debug sorting issues
+             $.each(combinedData, function() {
+               //console.log('when: ' + this.when + ', due date: ' + this.due_date  + ', sort date: '  + this.due_date_sort +  ', title: ' + this.title)
+               //console.log(this.when)
+             })
+             */
+             
+
+             $scope.todo_time_options = [{
+                 name: 'Earlier',
+                 value: 'earlier'
+             }, {
+                 name: 'Soon',
+                 value: 'soon'
+             }, {
+                 name: 'Later',
+                 value: 'later'
+             }, {
+                 name: 'No due date',
+                 value: 'nodate'
+             }, ];
+             $scope.showWhen = 'soon';
+
+             $scope.isOverdue = function(item) {
+                 var when = moment.unix(item.due_date_sort);
+                 var now = moment();
+                 if (when < now) {
+                     return 'overdue';
+                 }
+             };
+
+             $scope.setWhen = function(when) {
+                 $scope.showWhen = when;
+                 $scope.showTask = false;
+                 $scope.selected = false;
+                 for (var i = $scope.todos.length - 1; i >= 0; i--) {
+                    $scope.todos[i].checked = false;
+                 }
+                 $('#todo .itemList').attr('tabindex',-1).focus();
+             };
+
+             $scope.newTaskSubmitOnEnter = function() {
+                 var newObj = {};
+                 newObj.origin = 'gt';
+                 newObj.title = $scope.newTask;
+                 newObj.when = 'nodate';
+                 $scope.todos.push(newObj);
+                 localStorateUpdateTodos($scope.todos);
+                 $scope.showTask = false;
+                 $scope.newTask ='';
+                 $('#addToDo').focus();
+                 $('#quickAddTaskMessage').fadeIn('slow').delay(2000).fadeOut('slow');
+
+             };
+
+             $scope.newToDo = function() {
+                 var newObj = {};
+                 newObj.origin = 'gt';
+                 newObj.title = $('#toDoTitle').val();
+                 newObj.message = $('#toDoMessage').val();
+                 if ($('#editToDoDate').val() !== '') {
+                     newObj.due_date = moment($('#newToDoDate').val()).format('dddd, MMMM Do YYYY, h:mm a');
+                     newObj.due_date_short = moment($('#newToDoDate').val()).format('MM/DD');
+                     newObj.due_date_editable = moment($('#newToDoDate').val()).format('YYYY-MM-DD');
+                     newObj.due_time_editable = $('#newToDoTime').val();
+                     newObj.due_date_sort = moment($('#newToDoDate').val()).unix();
+                     var nowDay = moment().unix().toString();
+                     var nowDayAnd4 = moment().add(4, 'days').unix().toString();
+                     var dueDay = moment($('#newToDoDate').val()).unix().toString();
+
+                     if (dueDay < nowDay) {
+                         newObj.when = 'earlier';
+                     } else {
+                         if (dueDay > nowDayAnd4) {
+                             newObj.when = 'later';
+                         } else {
+                             newObj.when = 'soon';
+                         }
+                     }
+                 } else {
+                     newObj.when = 'nodate';
+                 }
+
+                 $scope.todos.push(newObj);
+                 $('#toDoTitle, #newToDoDate, #newToDoTime, #toDoMessage').val('');
+                 localStorateUpdateTodos($scope.todos);
+             };
+
+             $scope.editToDoSave = function() {
+
+                 var index = $('#editToDoSave').attr('data-index');
+                 $scope.todos[index].title = $('#editToDoTitle').val();
+                 $scope.todos[index].message = $('#editToDoMessage').val();
+                 if ($('#editToDoDate').val() !== '') {
+                     $scope.todos[index].due_date = moment($('#editToDoDate').val()).format('dddd, MMMM Do YYYY, h:mm a');
+                     $scope.todos[index].due_date_short = moment($('#editToDoDate').val()).format('MM/DD');
+                     $scope.todos[index].due_date_editable = moment($('#editToDoDate').val()).format('YYYY-MM-DD');
+                     $scope.todos[index].due_time_editable = $('#editToDoTime').val();
+                     $scope.todos[index].due_date_sort = moment($('#editToDoDate').val()).unix();
+                     $scope.todos[index].due_date_sort = moment($('#editToDoDate').val() + 'T' + $('#editToDoTime').val()).unix();
+                     //TODO: using this in several places
+                     //already - needs to be refactored.
+                     var nowDay = moment().unix().toString();
+                     var nowDayAnd4 = moment().add(4, 'days').unix().toString();
+                     var dueDay =  moment ( $('#editToDoDate').val() + 'T' + $('#editToDoTime').val() ).unix().toString();
+                     if (dueDay < nowDay) {
+                        $scope.todos[index].when = 'earlier';
+                     } else {
+                         if (dueDay > nowDayAnd4) {
+                             $scope.todos[index].when = 'later';
+                         } else {
+                             $scope.todos[index].when = 'soon';
+                         }
+                     }
+
+
+
+
+                 } else {
+                     $scope.todos[index].when = 'nodate';
+                 }
+
+                 localStorateUpdateTodos($scope.todos);
+             };
+
+
+             $scope.editTodo = function(item) {
+                 var index = $scope.todos.indexOf(item);
+                 $('#editToDoTitle').val(item.title);
+                 $('#editToDoMessage').val(item.message);
+                 $('#editToDoDate').val(item.due_date_editable);
+                 $('#editToDoTime').val(item.due_time_editable);
+                 $('#editToDoSave').attr('data-index', index);
+             };
+
+             $scope.updateToDoDate = function(index) {
+                 //console.log(index)
+
+                 //do a bit of jiggering here with the item date valiues and save as below
+                 /* values that need updating are:
+        
+                 newObj.due_date = moment($('#newToDoDate').val()).format("dddd, MMMM Do YYYY, h:mm a");
+                 newObj.due_date_short = moment($('#newToDoDate').val()).format("MM/DD");
+                 newObj.due_date_editable = moment($('#newToDoDate').val()).format("YYYY-MM-DD");
+                 newObj.due_time_editable = $('#newToDoTime').val();
+                 newObj.due_date_sort = moment($('#newToDoDate').val()).unix();
+                 */
+
+                 localStorateUpdateTodos($scope.todos);
+             };
+
+            /**
+             * Hide and show the delete todos button acording if at least one checkbox
+             * is checked or not
+            */
+
+             $scope.change = function(){
+                if( _.where($scope.todos, {checked: true} ).length ){
+                    $scope.selected = true;
+                }
+                else {
+                    $scope.selected = false;
+                }
+             };
+
+             $scope.removeToDos = function() {
+                 for (var i = $scope.todos.length - 1; i >= 0; i--) {
+                     if ($scope.todos[i].checked) {
+                         $scope.todos.splice(i, 1);
+                     }
+                 }
+                 localStorateUpdateTodos($scope.todos);
+                 $('#removeToDos').fadeOut('slow');
+             };
+         });
+     });
+ }]);
+

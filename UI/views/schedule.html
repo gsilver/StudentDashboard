@@ -1,0 +1,47 @@
+<div  ng-controller="scheduleController" class="itemPanel" ng-cloak id="schedule">
+  <h3 class="colHeader"><span class="sr-only">{{lang.panelTitle}}</span>
+    <div class="pull-right">
+          <small>{{dateWeek}}</small>
+          <div class="btn-group">
+            <button class="btn btn-sm btn-default" type="button" ng-click="pageDay('prev')">
+              <span class="sr-only"> Go to previous day</span> &lt;
+            </button> 
+            <button class="btn btn-sm btn-default" type="button" ng-click="pageDay('next')">
+              <span class="sr-only"> Go to next day</span> &gt;
+            </button>
+          </div>  
+
+    </div>
+  </h3>
+  <ul class="itemList">
+   
+    <li ng-repeat="item in filtered= (schedule | filter: {AggrMeeting : weekdayAbbr})|  orderBy: 'parseableTime'"  class="container-fluid animate" >
+  
+      <div class="row">
+        <div class="col-md-2 col-xs-2 calDate">
+          <small>
+            <strong ng-show="item.Meeting.length" ng-bind-html="item.Meeting[0].Times | fixClassTimes | trustAsHtml"></strong>
+            <strong ng-hide="item.Meeting.length" ng-bind-html="item.Meeting.Times | fixClassTimes | trustAsHtml"></strong>
+          </small>
+        </div>
+        <div class="col-md-10 col-xs-10">
+          {{item.SubjectCode}} {{item.CatalogNumber}} {{item.SectionNumber}} {{item.SectionType}} 
+          <br>
+          <small>
+            {{item.CourseDescr}}<br>
+              <!--// below should be a link if there is a location we can look up
+              on click we can retrieve the building json and open a new Google Maps window with those coordinates 
+              first the link for mobile (with directions from current location, next the link for-->
+              <span ng-repeat="location in item.Meeting.AggrLocation">
+                <em ng-show="$index > 0">/</em>
+                <a href="#" class="visible-xs-inline" ng-click="openMap(location, true)"><i class="glyphicon glyphicon-search"></i><em class="sr-only">See map for </em> {{location}}</a>
+                <a href="#" class="visible-sm-inline visible-md-inline visible-lg-inline"  ng-click="openMap(location, false)"><i class="glyphicon glyphicon-search"></i><em class="sr-only">See map for </em> {{location}}</a>
+              </span>
+          </small>
+        </div>
+      </div>
+    </li>
+    <li ng-show="filtered.length ===0">You have nothing scheduled on {{dateWeek}} that we know of.</li>
+  </ul>
+
+</div>
