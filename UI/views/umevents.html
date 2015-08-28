@@ -2,6 +2,7 @@
     <div id="uniEvents" class="itemPanel">
         <h3 class="colHeader">UM Events <small></small>
           <div class="btn-group pull-right">
+            <!--
             <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
               Tags <span class="caret"></span>
             </button>&nbsp;
@@ -11,6 +12,15 @@
                  id="tagLabel{{$id}}"> <label for="tagLabel{{$id}}">{{tag}}</label></span> </span>
               </li>
             </ul>
+          -->
+            <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
+              View <span class="caret"></span>
+            </button>
+            <ul role="menu" class="dropdown-menu">
+              <li><a ng-click="changeView('day')" href="">Today's events</a></li>
+              <li><a ng-click="changeView('week')" href="">Week's events</a></li>
+            </ul>&nbsp;
+            
           </div>
           <div id="eventMenu" class="btn-group pull-right">
             <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
@@ -33,8 +43,8 @@
                         <a class="btn btn-xs btn-link" ng-show="!umevshowdescription" ng-click="umevshowdescription = !umevshowdescription">(more<span class="sr-only"> on {{item.event_title}}</span>?)</a>
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-4 col-xs-5 date">
-                        <small class="dateSpan">{{item.datetime_start | date:'MM/dd'}}</small>
-                        <br> <small class="dateSpan">{{ item.datetime_start | date:'h:mm a'}}</small> <span ng-if="item.has_end_time !==0">-</span> <small class="dateSpan">{{ item.datetime_end | date:'h:mm a'}}</small>
+                        <small class="dateSpan" ng-show="umevents_view ==='week'">{{item.datetime_start | date:'EEEE (MM/dd)'}} <br> </small>
+                        <small class="dateSpan">{{ item.datetime_start | date:'h:mm a'}}</small> <span ng-if="item.has_end_time !==0">-</span> <small class="dateSpan">{{ item.datetime_end | date:'h:mm a'}}</small>
                     </div>
                 </div>
                 <div class="row">

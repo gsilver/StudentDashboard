@@ -78,7 +78,7 @@ dashboardApp.controller('termsController', ['Courses', 'Terms', '$rootScope', '$
 
 dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (UMEvents, $scope) {
   // use test data till we can get it from the calendar of events
-  var url = 'data/uniEvents.json';
+  var url = 'data/events_day.json';
   UMEvents.getEvents(url).then(function (data) {
     if (data.failure) {
       $scope.umevents.errors = data;
@@ -92,6 +92,32 @@ dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (
         $scope.loadingEvents = false;
     }
   });
+  // switch to day/wee view to view only selected category
+  $scope.changeView = function(view) {
+    
+    //when using real data the url will be more like
+    //var url = 'data/' + view + '/json';
+    var url = 'data/events_' + view + '.json';
+    UMEvents.getEvents(url).then(function (data) {
+    if (data.failure) {
+      $scope.umevents.errors = data;
+      $scope.loading = false;
+    } else {
+      console.log($scope.viewCategory)
+        $scope.categories = _.find(data, 'allCategories').allCategories;
+        $scope.tags = _.find(data, 'allTags').allTags;
+        data = _.reject(data, 'allCategories');
+        data = _.reject(data, 'allTags');
+        $scope.umevents = data;
+        //$scope.viewCategory = '';
+        $scope.umevents_view = view
+        $scope.loadingEvents = false;
+    }
+  });
+
+
+
+  };
   // filter to view only selected category
   $scope.getCategory = function(category) {
     $scope.viewCategory = category[0];
