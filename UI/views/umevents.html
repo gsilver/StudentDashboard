@@ -1,0 +1,65 @@
+<div id="uniEvents" class="itemPanel" ng-controller="uniEventsController">
+    <div>
+        <h3 class="colHeader"><span class="sr-only">UM Events</span> <small></small>
+          <div class="btn-group pull-right">
+            <!--
+            <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
+              Tags <span class="caret"></span>
+            </button>&nbsp;
+            <ul role="menu" class="dropdown-menu tagMenu">
+              <li>
+                <span ng-repeat="tag in tags"><span class="label label-outline"><input type="checkbox" ng-click="setSelectedTags()"
+                 id="tagLabel{{$id}}"> <label for="tagLabel{{$id}}">{{tag}}</label></span> </span>
+              </li>
+            </ul>
+          -->
+            <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
+              View <span class="caret"></span>
+            </button>
+            <ul role="menu" class="dropdown-menu">
+              <li><a ng-click="changeView('day')" href="">Today's events</a></li>
+              <li><a ng-click="changeView('week')" href="">Week's events</a></li>
+            </ul>&nbsp;
+            
+          </div>
+          <div id="eventMenu" class="btn-group pull-right">
+            <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
+              Categories <span class="caret"></span>
+            </button>
+            <ul role="menu" class="dropdown-menu catMenu">
+              <li ng-repeat="category in categories"><a ng-click="getCategory(category)" href="" style="position:relative">{{category[0]}} <span class="badge">{{category[1]}}</span></a></li>
+            </ul>
+          </div>
+          <div ng-show="loadingEvents" class="spinner pull-right ng-hide"></div>
+        </h3>
+        <p class="panelStatus" ng-show="viewCategory"> Showing {{viewCategory}}  <a href="" ng-click="viewCategory =''">  see all?</a></p>
+        <p class="panelStatus" ng-show="selectedTags"> Showing <span ng-repeat="selectedTag in selectedTags"> <span class="label label-primary">{{selectedTag}}</span> </span> - <a href="" ng-click="selectedTags =''">  see all?</a></p>
+        <ul class="itemList">
+            <li ng-repeat="item in filteredItems  = (umevents | filter:item.event_type = viewCategory) | orderBy: 'item.datetime_start'" class="container-fluid">
+            
+                <div class="row">
+                    <div class="col-lg-7 col-md-7 col-xs-7">
+                        <a target="_blank" href="{{item.permalink}}">{{item.event_title | words:7 }}</a>
+                        <a class="btn btn-xs btn-link" ng-show="!umevshowdescription" ng-click="umevshowdescription = !umevshowdescription">(more<span class="sr-only"> on {{item.event_title}}</span>?)</a>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-4 col-xs-5 date">
+                        <small class="dateSpan" ng-show="umevents_view ==='week'">{{item.datetime_start | date:'EEEE (MM/dd)'}} <br> </small>
+                        <small class="dateSpan">{{ item.datetime_start | date:'h:mm a'}}</small> <span ng-if="item.has_end_time !==0">-</span> <small class="dateSpan">{{ item.datetime_end | date:'h:mm a'}}</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div ng-show="umevshowdescription">{{item.description}}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <p ng-show="!umevshowalltags"><span ng-repeat="tag in item.tags | limitTo:4"><span class="label label-primary">{{tag}}</span> </span><a href="" ng-show="item.tags.length > 4" ng-click="umevshowalltags = !umevshowalltags"><small class="">more...</small> </a></p>
+                        <p ng-show="umevshowalltags" style="line-height:25px"><span ng-repeat="tag in item.tags"><span class="label label-primary">{{tag}}</span> </span>
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

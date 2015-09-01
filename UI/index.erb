@@ -158,38 +158,12 @@
                         </ul>
                     </div>
                 </div>
-                
+                -->
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col3 phasePlusOne">
-                    <h2 class="colHeader">Recent Activity</h2>
-
-                    <div id="events" class="itemPanel" ng-controller = "eventsController" ng-cloak>
-                        <ul>
-                            <li ng-repeat="item in events  | orderBy:'-date'" class="container-fluid">
-                                <div class="row">
-                                    <div class ="col-lg-1 col-md-1 col-xs-1  iconContainer">
-                                        <i class="glyphicon customIcon {{item.type}}"></i>
-                                    </div>
-                                    <div class ="col-lg-7 col-md-7 col-xs-7">
-                                        {{item.title}}
-                                        <br>
-                                        <small>
-                                            <a class="courseLink" href="{{item.link}}">{{item.context}}</a>
-                                        </small>
-                                    </div>
-                                    <div class ="col-md-4 col-sm-4 col-xs-4 date">
-                                        <small>
-                                        </small>
-                                        <small>
-                                            {{item.date | dateAgo}}
-                                        </small>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                    <div ng-include src="'views/umevents.html'"></div>
                 </div>
-            -->
-        </div>
+
+            </div>
         </div>
 
         <div id="spinner" style="display:none">
@@ -211,6 +185,9 @@
         </script>
         <script type="text/javascript" src="lib/angular/angular.min.js">
         </script>
+        <script type="text/javascript" src="lib/angular/angular-truncate.js">
+        </script>
+
         <script type="text/javascript" src="js/app/app.js">
         </script>
 

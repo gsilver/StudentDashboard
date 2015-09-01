@@ -2,7 +2,7 @@
 /* jshint  strict: true*/
 /* global $, angular */
 
-var dashboardApp = angular.module('dashboardApp', ['dashFilters']);
+var dashboardApp = angular.module('dashboardApp', ['dashFilters','truncate']);
 
 /**
  * Initialize Angular app with the user id and the strings file
