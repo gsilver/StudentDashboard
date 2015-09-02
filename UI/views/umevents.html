@@ -1,6 +1,7 @@
 <div id="uniEvents" class="itemPanel" ng-controller="uniEventsController">
     <div>
-        <h3 class="colHeader"><span class="sr-only">UM Events</span> <small></small>
+        <h3 class="colHeader"><span class="sr-only">UM Events</span>
+          
           <div class="btn-group pull-right">
             <!--
             <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
@@ -19,8 +20,7 @@
             <ul role="menu" class="dropdown-menu">
               <li><a ng-click="changeView('day')" href="">Today's events</a></li>
               <li><a ng-click="changeView('week')" href="">Week's events</a></li>
-            </ul>&nbsp;
-            
+            </ul>&nbsp;            
           </div>
           <div id="eventMenu" class="btn-group pull-right">
             <button data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle pull-right" type="button">
@@ -34,6 +34,8 @@
         </h3>
         <p class="panelStatus" ng-show="viewCategory"> Showing {{viewCategory}}  <a href="" ng-click="viewCategory =''">  see all?</a></p>
         <p class="panelStatus" ng-show="selectedTags"> Showing <span ng-repeat="selectedTag in selectedTags"> <span class="label label-primary">{{selectedTag}}</span> </span> - <a href="" ng-click="selectedTags =''">  see all?</a></p>
+        <p class="panelStatus" ng-show="umevents_view"> Showing  {{umevents_view}}</p>
+
         <ul class="itemList">
             <li ng-repeat="item in filteredItems  = (umevents | filter:item.event_type = viewCategory) | orderBy: 'item.datetime_start'" class="container-fluid">
             

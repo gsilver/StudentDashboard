@@ -116,6 +116,7 @@ dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (
         data = _.reject(data, 'allCategories');
         data = _.reject(data, 'allTags');
         $scope.umevents = data;
+        $scope.umevents_view = 'today';
         $scope.loadingEvents = false;
     }
   });
@@ -137,7 +138,7 @@ dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (
         data = _.reject(data, 'allTags');
         $scope.umevents = data;
         //$scope.viewCategory = '';
-        $scope.umevents_view = view
+        $scope.umevents_view = view;
         $scope.loadingEvents = false;
     }
   });

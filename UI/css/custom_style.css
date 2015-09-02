@@ -213,6 +213,20 @@ ul {
 #todo .newToDo label {
     font-weight:normal;
 }
+.tagMenu {
+    line-height: 25px;
+    min-width: 250px;
+    padding: 5px;
+}
+.catMenu {
+    min-width: 250px;
+ }
+ .catMenu .badge {
+    position:absolute;
+    right:5px;
+    top:4px
+ }
+
 .footerInfo {
     color: #fff;
     left: 75px;
