@@ -99,6 +99,11 @@ $(document).on('click', '.showMoreInstructors', function (e) {
   return null;
 });
 
+
+$(document).on('click', 'ul.tagMenu input, ul.tagMenu label', function (e) {
+    e.stopPropagation();
+});
+
 $(document).ready(function(){
   // determine size of viewport
   var is_mobile;

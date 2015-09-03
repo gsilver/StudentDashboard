@@ -226,6 +226,11 @@ ul {
     right:5px;
     top:4px
  }
+.tagMenu .label-outline {
+    background: #eee none repeat scroll 0 0;
+    border: 1px solid #aaa;
+    color: #000;
+}
 
 .footerInfo {
     color: #fff;
