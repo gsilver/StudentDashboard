@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-lg-5 col-md-5 col-sm-4 col-xs-5 date">
                         <small class="dateSpan" ng-show="umevents_view ==='week'">{{item.datetime_start | date:'EEEE (MM/dd)'}} <br> </small>
-                        <small class="dateSpan">{{ item.datetime_start | date:'h:mm a'}}</small> <span ng-if="item.has_end_time !==0">-</span> <small class="dateSpan">{{ item.datetime_end | date:'h:mm a'}}</small>
+                        <small class="dateSpan">{{ item.datetime_start | date:'h:mm a'}}</small> <span ng-if="item.has_end_time !==0">-</span> <small class="dateSpan">{{ item.datetime_end | date:'h:mm a'}}</small><br><small ng-if="item.campus_maps_id !=='1'">{{item.building_name}}</small> <a ng-if="item.campus_maps_id !=='1'" href="http://campusinfo.umich.edu/campusmap/{{item.campus_maps_id}}" target="_blank"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span></a><small ng-if="item.campus_maps_id ==='1'">{{item.building_name}}</small> 
                     </div>
                 </div>
                 <div class="row">
@@ -56,8 +56,8 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <p ng-show="!umevshowalltags"><span ng-repeat="tag in item.tags | limitTo:4"><span class="label label-primary">{{tag}}</span> </span><a href="" ng-show="item.tags.length > 4" ng-click="umevshowalltags = !umevshowalltags"><small class="">more...</small> </a></p>
-                        <p ng-show="umevshowalltags" style="line-height:25px"><span ng-repeat="tag in item.tags"><span class="label label-primary">{{tag}}</span> </span>
+                        <p class="tagList"ng-show="!umevshowalltags"><span ng-repeat="tag in item.tags | limitTo:4"><span class="label label-primary">{{tag}}</span> </span><a href="" ng-show="item.tags.length > 4" ng-click="umevshowalltags = !umevshowalltags"><small class="">more...</small> </a></p>
+                        <p class="tagList" ng-show="umevshowalltags"><span ng-repeat="tag in item.tags"><span class="label label-primary">{{tag}}</span> </span>
                         </p>
                     </div>
                 </div>
