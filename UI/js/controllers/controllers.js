@@ -131,7 +131,6 @@ dashboardApp.controller('uniEventsController', ['UMEvents', '$scope', function (
       $scope.umevents.errors = data;
       $scope.loading = false;
     } else {
-      console.log($scope.viewCategory)
         $scope.categories = _.find(data, 'allCategories').allCategories;
         $scope.tags = _.find(data, 'allTags').allTags;
         data = _.reject(data, 'allCategories');
