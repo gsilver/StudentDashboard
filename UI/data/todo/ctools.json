@@ -117,7 +117,7 @@
   "entityId": "10914"
 },{
   "calendarItem": {
-    "calendarTime": 1440866289000,
+    "calendarTime": 1442066115000,
     "calendarTimeLabelKey": "assignment.due.date",
     "context": {
       "contextId": "9477dc62-f6fe-4836-ae27-84d594a64127",
@@ -175,7 +175,7 @@
   "entityId": "10898"
 },{
   "calendarItem": {
-    "calendarTime": 1440866289000,
+    "calendarTime": 1441979715000,
     "calendarTimeLabelKey": "assignment.due.date",
     "context": {
       "contextId": "9477dc62-f6fe-4836-ae27-84d594a64127",
@@ -233,7 +233,7 @@
   "entityId": "10890"
 },{
   "calendarItem": {
-    "calendarTime": 1431216000000,
+    "calendarTime": 1441634115000,
     "calendarTimeLabelKey": "assignment.close.date",
     "context": {
       "contextId": "9477dc62-f6fe-4836-ae27-84d594a64127",
@@ -466,7 +466,7 @@
   "entityId": "10499"
 },{
   "calendarItem": {
-    "calendarTime": 1431291600000,
+    "calendarTime": 1441720515000,
     "calendarTimeLabelKey": "assignment.due.date",
     "context": {
       "contextId": "e9222585-bb4f-40ed-a411-c5e2f51d2baf",
