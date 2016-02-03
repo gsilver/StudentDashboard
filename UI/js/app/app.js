@@ -10,6 +10,7 @@ var dashboardApp = angular.module('dashboardApp', ['dashFilters']);
 
 dashboardApp.run(function ($rootScope) {
   $rootScope.user = $('#userId').text();
+  $rootScope.scheduleLimit = 5;
   $rootScope.lang = JSON.parse($('#lang').text());
 });
 

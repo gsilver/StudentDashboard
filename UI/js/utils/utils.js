@@ -105,7 +105,6 @@ var prepareSchedule = function(result) {
       this.due_date_medium = moment.unix(this.due_date_sort).format('MM/DD/YY h:mm a');
       this.due_date_short = moment.unix(this.due_date_sort).format('MM/DD');
       this.due_date_time = moment.unix(this.due_date_sort).format('h:mm a');
-
       var now = moment();
       var due = moment(this.due_date_sort * 1000);
 
@@ -114,12 +113,13 @@ var prepareSchedule = function(result) {
       }
 
       if (now.isSame(due, 'd')) {
-        this.when = 'today';
+        this.today=true;
+        this.when = 'upcoming';
       }
 
       // better for week - but still needs to incorporate todays items
       if ((due.diff(now, 'days') > 0) && (due.diff(now, 'days') < 7)) {  
-        this.when = 'week';
+        this.when = 'upcoming';
       }
     });
     combinedScheduleAndStatus.combinedSchedule = _.sortBy(combinedSchedule, 'due_date_sort');

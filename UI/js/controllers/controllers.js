@@ -89,16 +89,6 @@ dashboardApp.controller('scheduleController', ['Schedule', '$scope', '$rootScope
     $scope.loadingSchedule = false;
     $scope.schedule = data.combinedSchedule;
     $scope.scheduleStatus = data.status;
-    $scope.schedule_time_options = [{
-       name: 'Due last 7 days',
-       value: 'overdue'
-    }, {
-       name: 'Due today',
-       value: 'today'
-    }, {
-       name: 'Next 7 days',
-       value: 'week'
-    }];
 
    $scope.$on('canvasCourses', function (event, canvasCourses) {
       $.each($scope.schedule, function() {
@@ -112,11 +102,11 @@ dashboardApp.controller('scheduleController', ['Schedule', '$scope', '$rootScope
       });
    });
 
-    $scope.showWhen = 'today';
+    $scope.showWhen = 'upcoming';
 
-    $scope.setWhen = function(when) {
-       $scope.showWhen = when;
-       $('#schedule .itemList').attr('tabindex',-1).focus();
+    $scope.showAllSchedule = function() {
+       $rootScope.scheduleLimit = $scope.schedule.length
+
     };
   });
 }]);

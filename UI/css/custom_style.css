@@ -81,7 +81,7 @@ ul {
     list-style: none;
 }
 
-.itemPanel .itemList li, .loadingBox {
+.itemPanel .itemList li, .loadingBox, .itemListSchedule .listItem{
     position:relative;
     margin: 5px 0;
     padding: 10px;
@@ -94,6 +94,12 @@ ul {
 	box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.15);
 }
 
+.itemListSchedule li {
+    padding:0;
+}
+.itemListSchedule h4 {
+    color:#fff;
+}
 .row {
     margin: 0 0 5px 0;
 
