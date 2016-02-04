@@ -16,7 +16,7 @@
 
       <ul class="itemListSchedule">
           <li ng-repeat="item in filteredItems  = (schedule | filter:showWhen) |limitTo:scheduleLimit" class="container-fluid" ng-hide="item.when !== showWhen">
-              <h4 ng-if="item.today && $index === 0">Today</h4>
+              <h4 ng-if="item.today && $index === 0">Later today</h4>
               <h4 ng-if ="item.today !== filteredItems[$index - 1].today && !item.today">Next few days</h4>
               <div class="listItem">
                 <div class="row">
