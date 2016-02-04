@@ -13,7 +13,6 @@ dashboardApp.controller('termsController', ['Courses', 'Terms', '$rootScope', '$
   $scope.terms = [];
  
   var termsUrl = 'terms';
-
   //use the Terms factory as a promise. Add returned data to the scope
 
   Terms.getTerms(termsUrl).then(function (data) {
@@ -35,7 +34,7 @@ dashboardApp.controller('termsController', ['Courses', 'Terms', '$rootScope', '$
         $scope.courses = [];
         $scope.loading = true;
         var url = 'courses/' + $rootScope.user + '.json?TERMID=' + $scope.$parent.termId;
-      //use the Courses factory as a promise. Add returned data to the scope.
+        //use the Courses factory as a promise. Add returned data to the scope.
 
         Courses.getCourses(url).then(function (data) {
           if (data.failure) {
@@ -101,13 +100,19 @@ dashboardApp.controller('scheduleController', ['Schedule', '$scope', '$rootScope
     }];
 
    $scope.$on('canvasCourses', function (event, canvasCourses) {
+      // listens for changes to the canvasCourses array
+      // and uses them to populate the item.context values
+      // so that we can provide a course title in the Schedule panel
       $.each($scope.schedule, function() {
         if(this.contextLMS === 'canvas'){
           var thisId = _.last(this.contextUrl.split('/'));
           var thisContext = _.findWhere(canvasCourses, {id: thisId});
           if(thisContext){
             this.context = thisContext.title;
-          }          
+          }
+          else{
+            this.context = null;
+          }
         }
       });
    });

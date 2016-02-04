@@ -112,17 +112,31 @@
       "context": "course_48961",
       "id": "assignment_57680",
       "grade_type": "points",
-      "due_date_sort": "1454475540"
-    }, {
-      "title": "Jonathan Obar, Preventing Big Data Discrimination: Addressing Flawed Notice and Choice Privacy Policy",
+      "due_date_sort": "1454593279"
+    },{
+      "title": "Not in MPath data",
       "grade": "",
       "done": "",
       "contextLMS": "canvas",
       "description": "",
-      "link": "https://api-qa-gw.its.umich.edu/calendar?event_id=44563&include_contexts=course_52008",
-      "contextUrl": "CANVAS_INSTANCE_PREFIX",
-      "context": "course_52008",
-      "id": 44563
+      "link": "https://api-qa-gw.its.umich.edu/courses/48961/assignments/57680",
+      "contextUrl": "CANVAS_INSTANCE_PREFIX/courses/4896X",
+      "context": "course_48961",
+      "id": "assignment_57680",
+      "grade_type": "points",
+      "due_date_sort": "1454593279"
+    },{
+      "title": "Not in MPath data",
+      "grade": "",
+      "done": "",
+      "contextLMS": "canvas",
+      "description": "",
+      "link": "https://api-qa-gw.its.umich.edu/courses/48961/assignments/57680",
+      "contextUrl": "CANVAS_INSTANCE_PREFIX/courses/4896z",
+      "context": "course_48961",
+      "id": "assignment_57680",
+      "grade_type": "points",
+      "due_date_sort": "1454593279"
     }]
   }
 }
