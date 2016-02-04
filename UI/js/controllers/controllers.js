@@ -104,8 +104,9 @@ dashboardApp.controller('scheduleController', ['Schedule', '$scope', '$rootScope
 
     $scope.showWhen = 'upcoming';
 
-    $scope.showAllSchedule = function() {
-       $rootScope.scheduleLimit = $rootScope.scheduleLimit + 2
+    $scope.revealItemsSchedule = function($event) {
+      $event.preventDefault();
+       $rootScope.scheduleLimit = $rootScope.scheduleLimit + 5;
     };
   });
 }]);
