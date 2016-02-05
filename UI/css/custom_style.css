@@ -233,6 +233,9 @@ ul {
         padding:0 10px;
         font-size:150%;
     }
+    .itemListSchedule h4 {
+        color:#444;
+    }
     .contentWrapper .dashMessage {
         margin:5px 0;
     } 
